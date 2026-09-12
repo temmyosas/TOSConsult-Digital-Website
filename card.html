@@ -35,7 +35,6 @@
   }
 
   .stage{
-    perspective:1800px;
     width:100%;
     max-width:380px;
   }
@@ -45,22 +44,43 @@
     width:100%;
     aspect-ratio: 9 / 16.2;
     min-height:640px;
-    transform-style:preserve-3d;
-    transition:transform 0.7s cubic-bezier(.22,.9,.34,1);
     cursor:pointer;
   }
-  .card.flipped{ transform: rotateY(180deg); }
 
   .face{
     position:absolute;
     inset:0;
-    -webkit-backface-visibility:hidden;
-    backface-visibility:hidden;
     border-radius:28px;
     overflow:hidden;
     display:flex;
     flex-direction:column;
+    transition: opacity 0.35s ease, transform 0.35s ease;
     box-shadow: 0 30px 60px -20px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);
+  }
+
+  .front{
+    opacity:1;
+    transform: scale(1);
+    z-index:2;
+    pointer-events:auto;
+  }
+  .back{
+    opacity:0;
+    transform: scale(0.96);
+    z-index:1;
+    pointer-events:none;
+  }
+  .card.flipped .front{
+    opacity:0;
+    transform: scale(0.96);
+    z-index:1;
+    pointer-events:none;
+  }
+  .card.flipped .back{
+    opacity:1;
+    transform: scale(1);
+    z-index:2;
+    pointer-events:auto;
   }
 
   /* ---------- FRONT ---------- */
@@ -183,7 +203,6 @@
   .back{
     background: var(--cream);
     color:var(--ink);
-    transform: rotateY(180deg);
     padding:30px 26px 26px;
     align-items:stretch;
   }
@@ -405,7 +424,7 @@
 
         <div class="save-row">
           <a class="save-btn" href="tel:+2348088086683">Call</a>
-          <a class="save-btn" id="vcardBtn" href="#">Save Contact</a>
+          <a class="save-btn" id="vcardBtn" href="Temmy_Osas_TOSConsult.vcf" download="Temmy_Osas_TOSConsult.vcf">Save Contact</a>
         </div>
       </div>
     </div>
@@ -420,32 +439,7 @@
     card.classList.toggle('flipped');
   });
 
-  const vcard = [
-    "BEGIN:VCARD",
-    "VERSION:3.0",
-    "N:Osas;Temmy;;;",
-    "FN:Temmy Osas",
-    "ORG:TOSConsult Digital",
-    "TITLE:Lead Strategist",
-    "TEL;TYPE=CELL:+2348088086683",
-    "URL:https://tosconsultdigitaldot.netlify.app",
-    "ADR;TYPE=WORK:;;Online;Lagos;;;Nigeria",
-    "END:VCARD"
-  ].join("\n");
 
-  document.getElementById('vcardBtn').addEventListener('click', function(e){
-    e.preventDefault();
-    e.stopPropagation();
-    const blob = new Blob([vcard], {type:"text/vcard"});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = "Temmy_Osas_TOSConsult.vcf";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  });
 </script>
 
 </body>
